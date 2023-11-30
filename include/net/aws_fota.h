@@ -24,6 +24,8 @@ extern "C" {
 #endif
 
 enum aws_fota_evt_id {
+	/** AWS FOTA has been requested and is about to start */
+	AWS_FOTA_EVT_REQUESTED,
 	/** AWS FOTA has started */
 	AWS_FOTA_EVT_START,
 	/** AWS FOTA complete and status reported to job document.

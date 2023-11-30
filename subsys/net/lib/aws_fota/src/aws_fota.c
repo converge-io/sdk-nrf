@@ -362,9 +362,7 @@ static int job_update_accepted(struct mqtt_client *const client, uint32_t payloa
 
 	switch (execution_status) {
 	case AWS_JOBS_IN_PROGRESS: {
-		struct aws_fota_event aws_fota_evt = {
-			.id = AWS_FOTA_EVT_START
-		};
+		struct aws_fota_event aws_fota_evt = {.id = AWS_FOTA_EVT_REQUESTED};
 
 		LOG_DBG("Start downloading firmware from %s/%s",
 			(char *)hostname, (char *)file_path);
@@ -381,6 +379,8 @@ static int job_update_accepted(struct mqtt_client *const client, uint32_t payloa
 			sec_tag = CONFIG_AWS_FOTA_DOWNLOAD_SECURITY_TAG;
 		}
 
+		callback(&aws_fota_evt);
+
 		err = fota_download_start(hostname, file_path, sec_tag, 0, 0);
 		if (err) {
 			LOG_ERR("Error (%d) when trying to start firmware download", err);
@@ -388,6 +388,8 @@ static int job_update_accepted(struct mqtt_client *const client, uint32_t payloa
 		}
 
 		internal_state_set(STATE_DOWNLOADING);
+
+		aws_fota_evt.id = AWS_FOTA_EVT_START;
 		callback(&aws_fota_evt);
 		LOG_DBG("Job document was updated with status IN_PROGRESS");
 	}
