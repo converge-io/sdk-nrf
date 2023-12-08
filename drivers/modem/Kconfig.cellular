@@ -27,6 +27,10 @@ config MODEM_CELLULAR
 
 if MODEM_CELLULAR
 
+config MODEM_CELLULAR_USE_POWER_DOWN_SCRIPT
+	bool "Instead of power pin, use a script to suspend modem"
+	default n
+
 config MODEM_CELLULAR_APN
 	string "APN"
 	default "internet"
